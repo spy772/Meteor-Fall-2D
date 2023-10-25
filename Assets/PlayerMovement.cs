@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterController2D controller;
     public Animator animator;
+    AnimatorStateInfo animatorState;
     
     public float walkSpeed = 20f;
     public float runSpeed = 40f;
@@ -20,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller.OnLandEvent.AddListener(ChangeTransitionFields);
+
     }
 
 
@@ -41,20 +42,12 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-
-        if (animator.GetBool("isJumping") == true)
-        {
-            Debug.Log("Jumping");
-        }
-        
-
         controller.Move(horizontalMove * Time.deltaTime, false, isJumping);
         isJumping = false;
-        animator.SetBool("isJumping", false);
     }
 
-    void ChangeTransitionFields()
+    public void OnLanding()
     {
-
+        animator.SetBool("isJumping", false);
     }
 }
