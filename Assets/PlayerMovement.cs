@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
             isJumping = true;
         }
 
-        if (sprint.IsPressed() && animator.GetBool("isJumping") == false)
+        if (sprint.IsPressed())
         {
             animator.SetBool("isRunning", true);
             groundSpeed = runSpeed;
