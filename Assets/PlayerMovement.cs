@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
     public float runSpeed = 40f;
     float groundSpeed;
 
-    float horizontalMove = 0f;
     bool isJumping = false;
     float speed = 0f;
     Vector2 moveDirection = Vector2.zero;
