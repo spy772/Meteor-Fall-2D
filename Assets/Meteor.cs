@@ -25,7 +25,7 @@ public class Meteor : MonoBehaviour
     void Explode()
     {
         // explode animation
-
+        ScoreManager.instance.ChangePoints(10);
         Debug.Log("Enemy Destroyed");
         Destroy(gameObject);
     }
