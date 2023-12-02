@@ -8,7 +8,7 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance;
 
-    public TextMeshProUGUI scoreText;
+    public TMP_Text scoreText;
 
     int score = 0;
 
@@ -20,12 +20,12 @@ public class ScoreManager : MonoBehaviour
     void Start()
     {
         Debug.Log(scoreText);
-        scoreText.text = "Score: " + score.ToString();
+        scoreText.SetText("Score: " + score.ToString());
     }
 
     public void ChangePoints(int points)
     {
         score += points;
-        scoreText.text = "Score: " + score.ToString();
+        scoreText.SetText("Score: " + score.ToString());
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public bool playerDeactivated = false;
 
     public CharacterController2D controller;
     public Animator animator;
@@ -13,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private InputAction move;
     private InputAction fire;
     private InputAction sprint;
+    private InputAction teleport;
     
     public float walkSpeed = 20f;
     public float runSpeed = 40f;
@@ -32,13 +34,17 @@ public class PlayerMovement : MonoBehaviour
     {
         move = playerInputs.Player.Move;
         sprint = playerInputs.Player.Sprint;
+        teleport = playerInputs.Player.Teleport;
         move.Enable();
         sprint.Enable();
+        teleport.Enable();
     }
 
     private void OnDisable()
     {
         move.Disable();
+        sprint.Disable();
+        teleport.Disable();
     }
 
     // Start is called before the first frame update
@@ -71,16 +77,35 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
             groundSpeed = walkSpeed;
         }
+
+        if (teleport.IsPressed())
+        {
+            Debug.Log("Teleport pressed");
+            StartCoroutine("Teleport");
+        }
     }
 
     void FixedUpdate()
     {
-        controller.Move(moveDirection.x * groundSpeed * Time.deltaTime, false, isJumping);
-        isJumping = false;
+        if (!playerDeactivated)
+        {
+            controller.Move(moveDirection.x * groundSpeed * Time.deltaTime, false, isJumping);
+            isJumping = false;
+        }
     }
 
     public void OnLanding()
     {
         animator.SetBool("isJumping", false);
+    }
+
+    IEnumerator Teleport()
+    {
+        playerDeactivated = true;
+        Debug.Log("Teleporting");
+        yield return new WaitForSeconds(0.01f);
+        controller.Teleport();
+        yield return new WaitForSeconds(0.01f);
+        playerDeactivated = false;
     }
 }
