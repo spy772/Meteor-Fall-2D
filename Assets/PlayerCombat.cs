@@ -15,8 +15,10 @@ public class PlayerCombat : MonoBehaviour
     public int attackDamage = 100;
 
     public LayerMask enemyLayers;
+    [SerializeField] GameObject fireball;
 
     private InputAction attack;
+    private InputAction upwardsAttack;
 
     private void Awake()
     {
@@ -26,21 +28,33 @@ public class PlayerCombat : MonoBehaviour
     private void OnEnable()
     {
         attack = playerInputs.Player.Attack;
+        upwardsAttack = playerInputs.Player.UpwardsShot;
         attack.Enable();
+        upwardsAttack.Enable();
     }
 
     private void OnDisable()
     {
         attack.Disable();
+        upwardsAttack.Disable();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (attack.IsPressed())
+        if (upwardsAttack.IsPressed() && !animator.GetBool("isAttacking"))
+        {
+            UnityEngine.Debug.Log("UpwardsAttack");
+            animator.SetBool("isAttacking", true);
+            animator.SetTrigger("UpwardsAttack");
+            UpwardsAttack();
+        }
+
+        if (attack.IsPressed() && !animator.GetBool("isAttacking"))
         {
             animator.SetBool("isAttacking", true);
             animator.SetTrigger("MeleeAttack");
+            Attack();
         }
 
         if (!attack.IsPressed())
@@ -48,10 +62,24 @@ public class PlayerCombat : MonoBehaviour
             animator.ResetTrigger("MeleeAttack");
             animator.SetBool("isAttacking", false);
         }
+
+        if (!upwardsAttack.IsPressed())
+        {
+            animator.SetBool("isAttacking", false);
+            animator.ResetTrigger("UpwardsAttack");
+        }
+    }
+
+
+    public void UpwardsAttack()
+    {
+        UnityEngine.Debug.Log("InFunction");
+        Instantiate(fireball, transform.position, Quaternion.identity);
     }
 
     public void Attack()
     {
+        UnityEngine.Debug.Log("InAttack");
         // Play an attack animation
         // Detect enemies in range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
@@ -62,6 +90,7 @@ public class PlayerCombat : MonoBehaviour
             enemy.GetComponent<Meteor>().TakeDamage(attackDamage);
         }
     }
+
 
     private void OnDrawGizmosSelected()
     {

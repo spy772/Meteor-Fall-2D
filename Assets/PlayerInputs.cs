@@ -71,6 +71,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UpwardsShot"",
+                    ""type"": ""Button"",
+                    ""id"": ""46506eb2-ff9f-4f38-88b7-252bcf904820"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -315,6 +324,39 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Teleport"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""4348cefa-2ce6-418e-af3a-ab9f82aaf852"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UpwardsShot"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""e680bb36-5833-4913-866d-7180adf594f6"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UpwardsShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""b958af74-cf8e-47cc-b6ca-18d08c53570c"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UpwardsShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -905,6 +947,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Teleport = m_Player.FindAction("Teleport", throwIfNotFound: true);
+        m_Player_UpwardsShot = m_Player.FindAction("UpwardsShot", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -983,6 +1026,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Teleport;
+    private readonly InputAction m_Player_UpwardsShot;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -992,6 +1036,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @Teleport => m_Wrapper.m_Player_Teleport;
+        public InputAction @UpwardsShot => m_Wrapper.m_Player_UpwardsShot;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1016,6 +1061,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Teleport.started += instance.OnTeleport;
             @Teleport.performed += instance.OnTeleport;
             @Teleport.canceled += instance.OnTeleport;
+            @UpwardsShot.started += instance.OnUpwardsShot;
+            @UpwardsShot.performed += instance.OnUpwardsShot;
+            @UpwardsShot.canceled += instance.OnUpwardsShot;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1035,6 +1083,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Teleport.started -= instance.OnTeleport;
             @Teleport.performed -= instance.OnTeleport;
             @Teleport.canceled -= instance.OnTeleport;
+            @UpwardsShot.started -= instance.OnUpwardsShot;
+            @UpwardsShot.performed -= instance.OnUpwardsShot;
+            @UpwardsShot.canceled -= instance.OnUpwardsShot;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1222,6 +1273,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnTeleport(InputAction.CallbackContext context);
+        void OnUpwardsShot(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
